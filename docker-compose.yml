@@ -1,0 +1,223 @@
+version: '3.9'
+
+networks:
+  agent-platform:
+    driver: bridge
+
+services:
+  # Service Discovery
+  consul:
+    image: hashicorp/consul:1.19
+    container_name: consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    networks:
+      - agent-platform
+    command: agent -server -ui -bootstrap-expect=1 -client=0.0.0.0
+    volumes:
+      - consul-data:/consul/data
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # HAProxy Load Balancer for MCP Router
+  haproxy:
+    build:
+      context: .
+      dockerfile: haproxy/Dockerfile
+    container_name: haproxy-lb
+    ports:
+      - "50051:50051"  # gRPC Router (public-facing)
+      - "3000:3000"    # MCP Server HTTP/SSE (for Cursor)
+      - "8000:8000"    # Catalog API (public-facing)
+      - "8080:8080"    # Catalog UI (public-facing)
+      - "8404:8404"    # HAProxy stats page
+    networks:
+      - agent-platform
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+  # MCP Router (Scalable)
+  mcp-router:
+    build:
+      context: .
+      dockerfile: mcp-router/Dockerfile
+    # Removed container_name to allow scaling
+    ports:
+      - "50051"  # Let Docker assign random host ports
+    networks:
+      - agent-platform
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - MCP_ROUTER_PORT=50051
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: 2  # Default replicas, can be scaled with --scale flag
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s = socket.socket(); s.connect(('localhost', 50051)); s.close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Echo Agent
+  echo-agent:
+    build:
+      context: .
+      dockerfile: agents/echo/Dockerfile
+    # Removed container_name to allow scaling
+    ports:
+      - "50052"  # Let Docker assign random host ports
+    networks:
+      - agent-platform
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - AGENT_PORT=50052
+      # AGENT_HOST will be set dynamically by Docker
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # Default replicas, can be scaled with --scale flag
+
+  # Weather Tool
+  weather-tool:
+    build:
+      context: .
+      dockerfile: tools/weather-tool/Dockerfile
+    # Removed container_name to allow scaling
+    ports:
+      - "50053"  # Let Docker assign random host ports
+    networks:
+      - agent-platform
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - TOOL_PORT=50053
+      # TOOL_HOST will be set dynamically by Docker
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # Default replicas, can be scaled with --scale flag
+
+  # Itinerary Task Worker
+  itinerary-worker:
+    build:
+      context: .
+      dockerfile: tasks/itinerary-task/Dockerfile
+    # Removed container_name to allow scaling
+    ports:
+      - "50054"  # Let Docker assign random host ports
+    networks:
+      - agent-platform
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - WORKER_PORT=50054
+      # WORKER_HOST will be set dynamically by Docker
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # Default replicas, can be scaled with --scale flag
+
+  # MCP Server (for Cursor IDE integration)
+  mcp-server:
+    build:
+      context: .
+      dockerfile: mcp-server/Dockerfile
+    # No container_name to allow scaling if needed
+    # Port 3000 exposed through HAProxy, not directly
+    networks:
+      - agent-platform
+    environment:
+      - GRPC_ROUTER_HOST=haproxy
+      - GRPC_ROUTER_PORT=50051
+      - MCP_TRANSPORT=sse
+      - MCP_PORT=3000
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    depends_on:
+      consul:
+        condition: service_healthy
+      haproxy:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      replicas: 2  # Default replicas, can be scaled with --scale flag
+
+  # Catalog API (Backend for catalog UI)
+  catalog-api:
+    build:
+      context: .
+      dockerfile: catalog-api/Dockerfile
+    # Removed container_name to allow scaling
+    # Port 8000 exposed through HAProxy, not directly
+    networks:
+      - agent-platform
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - GRPC_ROUTER_HOST=haproxy
+      - GRPC_ROUTER_PORT=50051
+      - CATALOG_API_PORT=8000
+      # CATALOG_API_HOST will be set dynamically by Docker
+    depends_on:
+      consul:
+        condition: service_healthy
+      haproxy:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # Default replicas, can be scaled with --scale flag
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Catalog UI (Frontend for catalog)
+  catalog-ui:
+    build:
+      context: catalog-ui
+      dockerfile: Dockerfile
+    # Removed container_name to allow scaling
+    # Port 80 exposed through HAProxy on port 8080, not directly
+    networks:
+      - agent-platform
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - CATALOG_UI_PORT=80
+      # CATALOG_UI_HOST will be set dynamically by Docker
+    depends_on:
+      consul:
+        condition: service_healthy
+      haproxy:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      replicas: 1  # Default replicas, can be scaled with --scale flag
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  consul-data:

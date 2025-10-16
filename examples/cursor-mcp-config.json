@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "agent-platform": {
+      "url": "http://localhost:3000/sse",
+      "transport": "sse",
+      "description": "Agent Platform via HAProxy load balancer"
+    }
+  }
+}

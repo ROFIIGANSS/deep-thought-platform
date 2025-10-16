@@ -1,0 +1,164 @@
+syntax = "proto3";
+package agentplatform;
+
+// Agent Service Definition
+service AgentService {
+  rpc ExecuteTask(TaskRequest) returns (TaskResponse);
+  rpc StreamTask(TaskRequest) returns (stream TaskChunk);
+  rpc GetStatus(StatusRequest) returns (StatusResponse);
+  rpc RegisterAgent(AgentInfo) returns (RegistrationResponse);
+  rpc ListAgents(ListAgentsRequest) returns (ListAgentsResponse);
+}
+
+// Tool Service Definition
+service ToolService {
+  rpc ExecuteTool(ToolRequest) returns (ToolResponse);
+  rpc ListTools(ListToolsRequest) returns (ListToolsResponse);
+  rpc RegisterTool(ToolInfo) returns (RegistrationResponse);
+}
+
+// Task Worker Service
+service TaskWorker {
+  rpc ProcessTask(TaskRequest) returns (TaskResponse);
+  rpc GetTaskStatus(TaskStatusRequest) returns (TaskStatusResponse);
+  rpc ListWorkers(ListWorkersRequest) returns (ListWorkersResponse);
+}
+
+// Messages
+message TaskRequest {
+  string task_id = 1;
+  string agent_id = 2;
+  string input = 3;
+  map<string, string> parameters = 4;
+  repeated string tool_ids = 5;
+  string session_id = 6;  // Session ID for context recovery
+}
+
+message TaskResponse {
+  string task_id = 1;
+  string output = 2;
+  bool success = 3;
+  string error = 4;
+  map<string, string> metadata = 5;
+  string session_id = 6;  // Session ID for context recovery
+}
+
+message TaskChunk {
+  string task_id = 1;
+  string content = 2;
+  bool is_final = 3;
+  string session_id = 4;  // Session ID for context recovery
+}
+
+message StatusRequest {
+  string agent_id = 1;
+}
+
+message StatusResponse {
+  string agent_id = 1;
+  string status = 2;
+  int32 active_tasks = 3;
+  int64 uptime_seconds = 4;
+}
+
+message AgentInfo {
+  string agent_id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string capabilities = 4;
+  string endpoint = 5;
+  string detailed_description = 6;  // Comprehensive explanation
+  string how_it_works = 7;          // Methodology and approach
+  string return_format = 8;          // What the response looks like
+  repeated string use_cases = 9;     // Common use cases
+  string version = 10;               // Service version
+}
+
+message ToolInfo {
+  string tool_id = 1;
+  string name = 2;
+  string description = 3;
+  string endpoint = 4;
+  repeated ToolParameter parameters = 5;
+  string detailed_description = 6;  // Comprehensive explanation
+  string how_it_works = 7;          // Methodology and approach
+  string return_format = 8;          // What the response looks like
+  repeated string use_cases = 9;     // Common use cases
+  string version = 10;               // Service version
+}
+
+message ToolParameter {
+  string name = 1;
+  string type = 2;
+  bool required = 3;
+  string description = 4;
+}
+
+message RegistrationResponse {
+  bool success = 1;
+  string message = 2;
+  string service_id = 3;
+}
+
+message ToolRequest {
+  string tool_id = 1;
+  string operation = 2;
+  map<string, string> parameters = 3;
+  string session_id = 4;  // Session ID for context recovery
+}
+
+message ToolResponse {
+  bool success = 1;
+  string result = 2;
+  string error = 3;
+  string session_id = 4;  // Session ID for context recovery
+}
+
+message ListToolsRequest {
+  string filter = 1;
+}
+
+message ListToolsResponse {
+  repeated ToolInfo tools = 1;
+}
+
+message TaskStatusRequest {
+  string task_id = 1;
+}
+
+message TaskStatusResponse {
+  string task_id = 1;
+  string status = 2;
+  string progress = 3;
+  string result = 4;
+}
+
+message ListAgentsRequest {
+  string filter = 1;  // Optional filter by tag/capability
+}
+
+message ListAgentsResponse {
+  repeated AgentInfo agents = 1;
+}
+
+message ListWorkersRequest {
+  string filter = 1;  // Optional filter by tag
+}
+
+message ListWorkersResponse {
+  repeated WorkerInfo workers = 1;
+}
+
+message WorkerInfo {
+  string worker_id = 1;
+  string name = 2;
+  string description = 3;
+  string endpoint = 4;
+  repeated string tags = 5;
+  string detailed_description = 6;  // Comprehensive explanation
+  string how_it_works = 7;          // Methodology and approach
+  string return_format = 8;          // What the response looks like
+  repeated string use_cases = 9;     // Common use cases
+  string version = 10;               // Service version
+  repeated ToolParameter parameters = 11; // Optional input parameters
+}
