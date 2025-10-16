@@ -58,6 +58,8 @@ The platform consists of the following components:
      - Request/response examples
      - Scalable (1-3 instances)
 
+![Architecture Overview](docs/architecture-overview.png)
+
 ### Agents
 
 Agents are autonomous services that can execute tasks with specific capabilities.
