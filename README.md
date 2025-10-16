@@ -1,6 +1,25 @@
-# Agent Execution Platform
+# Deep Thought Agent Execution Platform
 
-A distributed, production-ready agent platform built with Python and gRPC, featuring service discovery, dynamic routing, horizontal scaling with HAProxy load balancing, and extensible agent/tool architecture.
+[![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)](https://python.org)
+[![gRPC](https://img.shields.io/badge/gRPC-1.60.0-green?logo=grpc&logoColor=white)](https://grpc.io)
+[![React](https://img.shields.io/badge/React-19.1.1-blue?logo=react&logoColor=white)](https://reactjs.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Docker-3.9-blue?logo=docker&logoColor=white)](https://docker.com)
+[![HAProxy](https://img.shields.io/badge/HAProxy-2.9-red?logo=haproxy&logoColor=white)](https://haproxy.org)
+[![Consul](https://img.shields.io/badge/Consul-1.19-purple?logo=consul&logoColor=white)](https://consul.io)
+[![Node.js](https://img.shields.io/badge/Node.js-20-green?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Vite](https://img.shields.io/badge/Vite-7.1.7-purple?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Nginx](https://img.shields.io/badge/Nginx-Alpine-green?logo=nginx&logoColor=white)](https://nginx.org)
+[![Protocol Buffers](https://img.shields.io/badge/Protocol%20Buffers-4.25.1-orange?logo=protobuf&logoColor=white)](https://developers.google.com/protocol-buffers)
+[![MCP](https://img.shields.io/badge/MCP-1.0.0+-yellow?logo=modelcontextprotocol&logoColor=white)](https://modelcontextprotocol.io)
+
+A distributed **Proof of Concept (PoC)** agent platform built with Python and gRPC, featuring service discovery, dynamic routing, horizontal scaling with HAProxy load balancing, and extensible agent/tool architecture. This PoC demonstrates a more efficient model to deploy agents in a standardized way.
+
+> **⚠️ Not Production Ready**: This is a PoC based on Docker Compose for development and testing. For production deployment, the next moves should be in the direction of deploying to a Kubernetes cluster using Terraform, Helm charts, and proper CI/CD pipelines.
+
+![Deep Thought](docs/deep-thought.png)
+
+> **🤖 Name Origins**: Inspired by "The Hitchhiker's Guide to the Galaxy" - where the Deep Thought computer calculated that the answer to the ultimate question of life, the universe, and everything is **42**. This platform represents our attempt to build the "agent infrastructure" that can help answer complex questions through distributed AI agents.
 
 ## 🏗️ Architecture
 
